@@ -181,11 +181,7 @@ app.post('/update-a-db-record', (req, res) => {
         }
     );
 });
-
-/*
- * This router handles GET requests to
- * http://localhost:3000/delete-a-db-record/
- */
+/* This router handles GET requests to */
 app.get(`/delete-a-db-record`, (req, res) => {
     db.collection(dbCollection).find().toArray((err, arrayObject) => {
         res.render(`delete-a-record-in-database.njk`,
