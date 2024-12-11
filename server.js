@@ -160,6 +160,27 @@ app.get(`/update-a-db-record`, (req, res) => {
         }
     });
 });
+app.post('/update-a-db-record', (req, res) => {
+    const { name, password } = req.body;
+    if (!name || !password) {
+        console.log('Error: Both name and password must be provided.');
+        return res.redirect('/update-a-db-record');
+    }
+
+    db.collection(dbCollection).updateOne(
+        { name: name },
+        { $set: { password: password } },
+        (error) => {
+            if (error) {
+                console.log('Failed to update record:', error);
+                return res.send('An error occurred while updating the record.');
+            } else {
+                console.log(`Successfully updated password for ${name}.`);
+                res.redirect('/read-a-db-record');
+            }
+        }
+    );
+});
 
 /*
  * This router handles GET requests to
@@ -171,3 +192,24 @@ app.get(`/delete-a-db-record`, (req, res) => {
             {mongoDBArray: arrayObject});
     });
 });
+app.post('/delete-a-db-record', (req, res) => {
+    const { name } = req.body;
+    if (!name) {
+        console.log('Error: Name must be provided to delete the record.');
+        return res.redirect('/delete-a-db-record');
+    }
+    db.collection(dbCollection).deleteOne(
+        { name: name },
+        (error) => {
+            if (error) {
+                console.log('Failed to delete record:', error);
+                return res.send('An error occurred while deleting the record.');
+            } else {
+                console.log(`Successfully deleted record for ${name}.`);
+                res.redirect('/delete-a-db-record');
+            }
+        }
+    );
+});
+
+
